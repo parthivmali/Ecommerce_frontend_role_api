@@ -12,7 +12,7 @@ const LoginUser = () => {
             password:''
         },
         validationSchema:LoginSchemas,
-        onSubmit : (values) => {
+        onSubmit :  (values) => {
             const {email, password} = values
             const logValue = {
                 email,
@@ -21,15 +21,15 @@ const LoginUser = () => {
             login(logValue)
             .then((res) => {
               if(res){
-                console.log("Res =>",res);
+                
                 void Swal.fire({
                     icon: 'success',
                     title: 'Login Successful',
                 }).then(() => {
                     if (res.role === 'admin') {
-                        navigate('/');
+                       navigate('/admin/dashboard');
                     } else {
-                        navigate('/');
+                        navigate('/home');
                     }
                 });
               }

@@ -27,7 +27,7 @@ const Navbar = () => {
         }).then(() => {
             Cookies.remove('jwt')
             Cookies.remove('jwt_admin')
-            navigate('/user-login')
+            navigate('/')
             setCheckedLogin(false);
         });
       }else{
@@ -199,7 +199,7 @@ const Navbar = () => {
 
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
-                <Link to={"/"}>
+                <Link to={"/home"}>
                   <span className="sr-only">Your Company</span>
                   <img
                     className="h-8 w-auto"
@@ -321,7 +321,7 @@ const Navbar = () => {
               <div className="ml-auto flex items-center">
               {checkedLogin ? 
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <Link to={"/user-login"} className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                  <Link to={"/"} className="text-sm font-medium text-gray-700 hover:text-gray-800">
                     Sign in
                   </Link>
                   <span className="h-6 w-px bg-gray-200" aria-hidden="true" />

@@ -7,14 +7,14 @@ import { Loader } from '../../user/assets/Loader'
 
 const Private = () => {
     const navigate = useNavigate()
-    const [checkLogin, setCheckLogin] = useState('')
+    const [checkLogin, setCheckLogin] = useState(false)
 
     useEffect(() => {
       const login = Cookies.get('jwt')
       if(login){
-        setCheckLogin(login)
+        setCheckLogin(true)
       }else{
-        navigate('/user-login')
+        navigate('/')
       }
     }, [navigate])
     

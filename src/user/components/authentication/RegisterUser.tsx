@@ -35,7 +35,7 @@ const RegisterUser = () => {
                     icon: 'success',
                     title: 'Registration Successful',
                 }).then(() => {
-                    navigate('/user-login')
+                    navigate('/')
                 });    
             }).catch((err:AxiosError<string>)=>{
                 if(err.response && err.response.data){
@@ -120,7 +120,7 @@ const RegisterUser = () => {
                         </div>
                         <p className="my-3 text-center text-sm text-gray-600">
                             Already have an account?{' '}
-                            <Link to={'/user-login'}>
+                            <Link to={'/'}>
                                 <span className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Login</span>
                             </Link>
                         </p>

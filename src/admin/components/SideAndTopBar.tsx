@@ -2,17 +2,14 @@ import { Transition, Dialog, Menu } from '@headlessui/react'
 import { XMarkIcon, Cog6ToothIcon, Bars3Icon, BellIcon, ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { Fragment, useState } from 'react'
 import { navigationBar } from '../../user/hooks/data'
-import { Routes, Route, useNavigate } from 'react-router-dom'
-import Dashboard from '../pages/Dashboard'
+import { Link, Route, Routes, useNavigate } from 'react-router-dom'
+import Dashboard from '../pages/dashboard'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import Toaster from '../../user/hooks/Toaster'
 import { API_URL } from '../../user/services/Auth-services'
 import Cookies from 'js-cookie'
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
+import ShowAllProduct from '../pages/products/ShowAllProduct'
 
 const SideAndTopBar = () => {
   const navigate = useNavigate()
@@ -28,7 +25,7 @@ const SideAndTopBar = () => {
         }).then(() => {
             Cookies.remove('jwt')
             Cookies.remove('jwt_admin')
-            navigate('/user-login')
+            navigate('/')
         });
       }else{
         Toaster.error('Logout Failed.')
@@ -86,11 +83,7 @@ const SideAndTopBar = () => {
                   {/* Sidebar component, swap this element with another sidebar if you like */}
                   <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
                     <div className="flex h-16 shrink-0 items-center">
-                      <img
-                        className="h-8 w-auto"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                        alt="Your Company"
-                      />
+                    <p className='text-white capitalize text-lg'>Ecommerce web app logo...</p>
                     </div>
                     <nav className="flex flex-1 flex-col">
                       <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -98,18 +91,12 @@ const SideAndTopBar = () => {
                           <ul role="list" className="-mx-2 space-y-1">
                             {navigationBar.map((item) => (
                               <li key={item.name}>
-                                <a
-                                  href={item.href}
-                                  className={classNames(
-                                    item.current
-                                      ? 'bg-gray-800 text-white'
-                                      : 'text-gray-400 hover:text-white hover:bg-gray-800',
-                                    'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                                  )}
-                                >
+                                <Link
+                                  to={item.href}
+                                  className='text-gray-400 hover:text-white hover:bg-gray-800 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'>
                                   <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
                                   {item.name}
-                                </a>
+                                </Link>
                               </li>
                             ))}
                           </ul>
@@ -137,11 +124,7 @@ const SideAndTopBar = () => {
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
             <div className="flex h-16 shrink-0 items-center">
-              <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                alt="Your Company"
-              />
+              <p className='text-white capitalize text-xl'>Ecommerce logo...</p>
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -149,18 +132,13 @@ const SideAndTopBar = () => {
                   <ul role="list" className="-mx-2 space-y-1">
                     {navigationBar.map((item) => (
                       <li key={item.name}>
-                        <a
-                          href={item.href}
-                          className={classNames(
-                            item.current
-                              ? 'bg-gray-800 text-white'
-                              : 'text-gray-400 hover:text-white hover:bg-gray-800',
-                            'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                          )}
+                        <Link
+                          to={item.href}
+                          className='text-gray-400 hover:text-white hover:bg-gray-800 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
                         >
                           <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
                           {item.name}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>
@@ -258,7 +236,8 @@ const SideAndTopBar = () => {
           <main className="py-10">
             <div className="px-4 sm:px-6 lg:px-8">
                 <Routes>
-                  <Route path='/' element={<Dashboard/>}></Route>
+                  <Route path="dashboard" element={<Dashboard/>}/>
+                  <Route path='products' element={<ShowAllProduct/>}/>
                 </Routes>
             </div>
           </main>

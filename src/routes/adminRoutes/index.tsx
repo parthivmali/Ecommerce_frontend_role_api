@@ -12,7 +12,7 @@ const AdminRoutes = () => {
       if(login){
         setCheckLogin(login)
       }else{
-        navigate('/user-login')
+        navigate('/')
       }
     }, [navigate])
     

@@ -11,9 +11,7 @@ const Private = React.lazy(() => import('./private'));
 const Public = React.lazy(() => import('./public'));
 const AdminRoutes = React.lazy(() => import('./adminRoutes'));
 const Error = React.lazy(() => import('../user/pages/error/index'));
-const AddProduct = React.lazy(() => import('../admin/pages/AddProduct'));
-const ShowAllProduct = React.lazy(() => import('../admin/pages/ShowAllProduct'));
-const Dashboard = React.lazy(() => import('../admin/components/SideAndTopBar'));
+const SideAndTopBar = React.lazy(() => import('../admin/components/SideAndTopBar'));
 
 
 const index = () => {
@@ -29,8 +27,8 @@ const index = () => {
           {isLoggedIn ? 
           <>
             {/* User Routes */}
-              <Route path='/' element={<Private/>}>
-                <Route path="/" element={<Home/>}/>
+              <Route element={<Private/>}>
+                <Route path="/home" element={<Home/>}/>
                 <Route path="/offers" element={<Offer/>}/>
                 <Route path="/products" element={<Products/>}/>
               </Route>
@@ -38,17 +36,15 @@ const index = () => {
           :
           <>
             {/* Admin Routes */}
-              <Route path="/" element={<AdminRoutes/>}>
-                <Route path="/" element={<Dashboard/>}/>
-                <Route path="/add-product" element={<AddProduct/>}/>
-                <Route path="/all-products" element={<ShowAllProduct/>}/>
+              <Route element={<AdminRoutes/>}>
+                <Route path="admin/*" element={<SideAndTopBar/>}/>
               </Route>
           </>
           }
           {/* Authentication Routes */}
-          <Route path='/' element={<Public/>}>
+          <Route element={<Public/>}>
             <Route path="/user-register" element={<RegisterUser/>}/>
-            <Route path="/user-login" element={<LoginUser/>}/>
+            <Route path="/" element={<LoginUser/>}/>
           </Route>
 
           {/* Error Page Routes */}

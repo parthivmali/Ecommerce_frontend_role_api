@@ -189,12 +189,12 @@ export const footerNavigation = {
 
 //  Admin :
 export const navigationBar = [
-  { name: 'Dashboard', href: '/', icon: VscPieChart, current: true },
-  { name: 'Users', href: '#', icon: UsersIcon, current: false },
-  { name: 'Orders', href: '#', icon: TbListCheck, current: false },
-  { name: 'Categories', href: '#', icon: HiOutlineViewGridAdd, current: false },
-  { name: 'Products', href: '#', icon: BiCartAdd, current: false },
-  { name: 'Offers', href: '#', icon: MdOutlineLocalOffer, current: false },
-  { name: 'Payment History', href: '#', icon: RiChatHistoryLine, current: false },
-  { name: 'Featured Product', href: '#', icon: TbDiscountCheck, current: false },
+  { name: 'Dashboard', href: 'dashboard', icon: VscPieChart },
+  { name: 'Users', href: 'dashboard', icon: UsersIcon },
+  { name: 'Orders', href: 'dashboard', icon: TbListCheck },
+  { name: 'Categories', href: 'dashboard', icon: HiOutlineViewGridAdd },
+  { name: 'Products', href: 'products', icon: BiCartAdd },
+  { name: 'Offers', href: 'dashboard', icon: MdOutlineLocalOffer },
+  { name: 'Payment History', href: 'dashboard', icon: RiChatHistoryLine },
+  { name: 'Featured Product', href: 'dashboard', icon: TbDiscountCheck },
 ]

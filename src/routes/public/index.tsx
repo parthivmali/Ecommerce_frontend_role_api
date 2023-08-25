@@ -8,12 +8,12 @@ const Public = () => {
     const [checkedLogin, setCheckedLogin]=useState(false)
 
     useEffect(() => {
-      const login= Cookies.get('jwt')
-      const admin = Cookies.get('jwt_admin')
-      if(login || admin){
-        setCheckedLogin(true)   
+      const login = Cookies.get('jwt');
+      const admin = Cookies.get('jwt_admin');
+      if (login || admin) {
+        setCheckedLogin(true);
       }
-    }, [])
+    }, []);
     
   return (
     <Suspense fallback={<Loader/>}>
@@ -24,7 +24,7 @@ const Public = () => {
       {navigate('/')}
       </>
       :
-        <Outlet/>
+      <Outlet/>
       }
     </>
     </Suspense>
