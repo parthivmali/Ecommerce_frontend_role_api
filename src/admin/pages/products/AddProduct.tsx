@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 
 
 const AddProduct:FC<IOpenClose> = ({ isOpen, onClose, updateProductList, editProduct}) => {
+  console.log("edited product=>",editProduct);
   
   // const [formData, setFormData] = useState({
   //   prod_name : "",
@@ -19,12 +20,12 @@ const AddProduct:FC<IOpenClose> = ({ isOpen, onClose, updateProductList, editPro
   useEffect(() => {
     if(editProduct){
       formik.setValues({
-        prod_name : editProduct.prod_name,
-        description : editProduct.description,
-        price : editProduct.price,
-        images : editProduct.images,
-        category : editProduct.category,
-        stock: editProduct.stock
+        prod_name : editProduct?.prod_name,
+        description : editProduct?.description,
+        price : editProduct?.price,
+        images : editProduct?.images,
+        category : editProduct?.category,
+        stock: editProduct?.stock
       })
     }
   }, [editProduct])
@@ -56,16 +57,23 @@ const AddProduct:FC<IOpenClose> = ({ isOpen, onClose, updateProductList, editPro
                 }
                 await updateProducts(editProduct?._id , updateProduct)
                 .then((res)=>{
-                  console.log(res);
-                  Swal.fire("Success", "Product updated successfully.", "success");
+                  if(res){
+                    Swal.fire({
+                      position: 'top-end',
+                      icon: 'success',
+                      title: 'Product update successfully.',
+                      showConfirmButton: false,
+                      timer: 1000
+                    })
+                  }
                   updateProductList();
                   formik.resetForm();
-                  onClose();
                 })
                 .catch((error)=>{
                   Swal.fire("Error", "An error occurred while updating the product.", "error");
                   console.log(error.message);
                 })
+                onClose();
               }else{
                 const products:IAddProduct = {
                   prod_name,
