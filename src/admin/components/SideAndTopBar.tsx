@@ -1,15 +1,18 @@
 import { Transition, Dialog, Menu } from '@headlessui/react'
 import { XMarkIcon, Cog6ToothIcon, Bars3Icon, BellIcon, ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { Fragment, useState } from 'react'
+import { useFormik } from 'formik'
 import { navigationBar } from '../../user/hooks/data'
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
+import { API_URL } from '../../user/services/Auth-services'
+import { searchProducts } from '../services/Auth-Service'
 import Dashboard from '../pages/dashboard'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import Toaster from '../../user/hooks/Toaster'
-import { API_URL } from '../../user/services/Auth-services'
 import Cookies from 'js-cookie'
 import ShowAllProduct from '../pages/products/ShowAllProduct'
+import SearchProd from '../pages/products/searchProd'
 
 const SideAndTopBar = () => {
   const navigate = useNavigate()
@@ -36,6 +39,28 @@ const SideAndTopBar = () => {
       
     }
   }
+  
+  const formik = useFormik({
+    initialValues: {
+      search: ''
+    },
+    onSubmit: (values) => {
+      console.log(values);
+      searchProducts(values.search)
+      .then((res) => {
+        console.log("res =>",res);
+        if(res){
+          const {data: {data}} = res
+          navigate(`/admin/search`, {state: {data}})
+        }
+      })
+      .catch((error) => {
+        console.log("error =>",error);
+        
+      })
+      
+    }
+  })
   return (
     <>
       <div>
@@ -168,20 +193,24 @@ const SideAndTopBar = () => {
               <div className="h-6 w-px bg-gray-900/10 lg:hidden" aria-hidden="true" />
 
               <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-                <form className="relative flex flex-1 items-center" action="#" method="GET">
+                <form className="relative flex flex-1 items-center" action="" onSubmit={formik.handleSubmit} method="POST">
                   <label htmlFor="search-field" className="sr-only">
                     Search
                   </label>
-                  <MagnifyingGlassIcon
-                    className="cursor-pointer absolute inset-y-0 left-2 h-full w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
+                  <button>
+                    <MagnifyingGlassIcon
+                      className="absolute inset-y-0 left-2 h-full w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </button>
                   <input
                     id="search-field"
-                    className="block h-10 w-full border-0 py-0 pl-10 pr-0 text-gray-200 bg-gray-800 rounded-3xl placeholder:text-gray-400 focus:ring-0 sm:text-sm"
-                    placeholder="Search..."
                     type="search"
                     name="search"
+                    className="block h-10 w-full border-0 py-0 pl-10 pr-0 text-gray-200 bg-gray-800 rounded-3xl placeholder:text-gray-400 focus:ring-0 sm:text-sm"
+                    placeholder="Search..."
+                    onChange={formik.handleChange}
+                    value={formik.values.search}
                   />
                 </form>
                 <div className="flex items-center gap-x-4 lg:gap-x-6">
@@ -238,6 +267,7 @@ const SideAndTopBar = () => {
                 <Routes>
                   <Route path="dashboard" element={<Dashboard/>}/>
                   <Route path='products' element={<ShowAllProduct/>}/>
+                  <Route path="search" element={<SearchProd/>}/>
                 </Routes>
             </div>
           </main>

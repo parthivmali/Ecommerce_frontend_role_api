@@ -3,27 +3,27 @@ export interface IGetAllProduct {
     _id: string;
     prod_name: string;
     description: string;
-    price: number;
+    price: string;
     category: string;
-    stock: number
+    stock: string
 
 }
 
 export interface IAddProduct {
     prod_name: string;
     description: string;
-    price: number;
+    price: string;
     images: string;
     category: string;
-    stock: number
+    stock: string
 }
 
 export interface IUpdateProduct {
     prod_name: string;
     description: string;
-    price: number;
+    price: string;
     category: string;
-    stock: number
+    stock: string
 }
 
 export interface IOpenClose {
@@ -31,4 +31,5 @@ export interface IOpenClose {
     onClose: () => void;
     updateProductList: () => void;
     editProduct: IGetAllProduct | null
+    setProduct : React.Dispatch<React.SetStateAction<IGetAllProduct | null>>
 }

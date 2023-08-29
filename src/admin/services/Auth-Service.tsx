@@ -1,7 +1,6 @@
 import axios from "axios"
 import { API_URL } from "../../user/services/Auth-services"
 import { AuthHeader } from "./Auth-Header"
-import { IAddProduct, IUpdateProduct } from "../interfaces"
 
 // Get All Products
 export const getAllProduct = async () => {
@@ -17,7 +16,7 @@ export const getAllProduct = async () => {
 }
 
 // Add New Products
-export const addNewProduct = async (products:IAddProduct) => {
+export const addNewProduct = async (products: FormData) => {
     return await axios.post(`${API_URL}api/v1/products/new`,products)
 }
 
@@ -34,10 +33,21 @@ export const deleteProduct = async (id: string) => {
 }
 
 //Update Clickable Product
-export const updateProducts = async (id:string,data:IUpdateProduct) => {
+export const updateProducts = async (id:string,data:FormData) => {
     try {
         const res = await axios.put(`${API_URL}api/v1/products/${id}`, data, {headers: AuthHeader()});
         return res
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+//Search Product 
+export const searchProducts = async (search:string) => {
+    try {
+        const res = await axios.get(`${API_URL}api/v1/search?keyword=${search}`);
+        return res;
     } catch (error) {
         console.log(error);
         

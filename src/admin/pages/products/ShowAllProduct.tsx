@@ -3,7 +3,6 @@ import { IGetAllProduct } from "../../interfaces";
 import { deleteProduct, getAllProduct } from "../../services/Auth-Service";
 // import { useNavigate } from "react-router-dom";
 import AddProduct from "./AddProduct";
-import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const ShowAllProduct = () => {
@@ -11,6 +10,9 @@ const ShowAllProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [getProduct, setGetProduct] = useState([])
   const [editProduct, setEditProduct] = useState<IGetAllProduct | null>(null)
+
+  console.log("get ->", getProduct);
+  
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -67,10 +69,9 @@ const ShowAllProduct = () => {
     });
   }
 
-  const handleEditProduct = (id:string, data:IGetAllProduct) => {
-    console.log(id,data);
-    setEditProduct(data);
+  const handleEditProduct = (data:IGetAllProduct) => {
     openModal();
+    setEditProduct(data);
   }
 
   useEffect(() => {
@@ -88,7 +89,7 @@ const ShowAllProduct = () => {
           </p>
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <AddProduct isOpen={isModalOpen} onClose={closeModal} updateProductList={updateProductList} editProduct={editProduct}/>
+          <AddProduct isOpen={isModalOpen} onClose={closeModal} updateProductList={updateProductList} editProduct={editProduct} setProduct={setEditProduct}/>
           <button
             onClick={openModal}
             type="button"
@@ -111,6 +112,9 @@ const ShowAllProduct = () => {
                     Description
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Images
+                  </th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Prices
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
@@ -131,16 +135,18 @@ const ShowAllProduct = () => {
                       {person.prod_name}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.description}</td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      <img width="100" src={`http://localhost:4001/${person.images}`} alt="products" /></td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.price}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.category}</td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.stock}</td>
-                    <td className=" py-4 pl-3 pr-4 text-sm font-medium sm:pr-0 flex justify-around">
-                        <Link to={"#"} className="text-indigo-600 hover:text-indigo-900" onClick={() => handleEditProduct(person._id,person)}>
+                    <td className="whitespace-nowrap py-4 pl-3 text-sm font-medium sm:pr-0">
+                        <button className="text-indigo-600 hover:text-indigo-900 flex" onClick={() => handleEditProduct(person)}>
                           Edit
-                        </Link>
-                        <Link to={"#"} className="text-red-500 hover:text-red-600" onClick={() => handleDeleteProduct(person._id)}>
+                        </button>
+                        <button className="text-red-500 hover:text-red-600" onClick={() => handleDeleteProduct(person._id)}>
                           Delete
-                        </Link>
+                        </button>
                     </td>
                   </tr>
                 ))}

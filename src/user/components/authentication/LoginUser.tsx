@@ -21,7 +21,6 @@ const LoginUser = () => {
             login(logValue)
             .then((res) => {
               if(res){
-                
                 void Swal.fire({
                     icon: 'success',
                     title: 'Login Successful',
