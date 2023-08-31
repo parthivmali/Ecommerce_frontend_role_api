@@ -33,3 +33,8 @@ export interface IOpenClose {
     editProduct: IGetAllProduct | null
     setProduct : React.Dispatch<React.SetStateAction<IGetAllProduct | null>>
 }
+
+export interface IGetFilterName {
+    name: string;
+    current: boolean;
+}

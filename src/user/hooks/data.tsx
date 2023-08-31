@@ -198,3 +198,9 @@ export const navigationBar = [
   { name: 'Payment History', href: 'dashboard', icon: RiChatHistoryLine },
   { name: 'Featured Product', href: 'dashboard', icon: TbDiscountCheck },
 ]
+
+export const sortOptions = [
+  { name: 'Clothes', current: false },
+  { name: 'Electronics', current: false },
+  { name: 'Fresh Fruites', current: false }
+]

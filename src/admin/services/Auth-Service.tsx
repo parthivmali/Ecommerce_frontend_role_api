@@ -1,6 +1,7 @@
 import axios from "axios"
 import { API_URL } from "../../user/services/Auth-services"
 import { AuthHeader } from "./Auth-Header"
+import { IGetFilterName } from "../interfaces"
 
 // Get All Products
 export const getAllProduct = async () => {
@@ -51,5 +52,18 @@ export const searchProducts = async (search:string) => {
     } catch (error) {
         console.log(error);
         
+    }
+}
+
+//Filter Product 
+export const filterProduct = async (option:IGetFilterName) => {
+    console.log(option);
+    
+    try {
+        const res = await axios.get(`${API_URL}api/v1/search?category=${option.name}`);
+        console.log("filter res =>",res);
+        return res;
+    } catch (error) {
+        console.log(error);
     }
 }

@@ -1,19 +1,25 @@
-import { useEffect, useState } from "react";
-import { IGetAllProduct } from "../../interfaces";
-import { deleteProduct, getAllProduct } from "../../services/Auth-Service";
+import { Fragment, useEffect, useState } from "react";
+import { IGetAllProduct, IGetFilterName } from "../../interfaces";
+import { deleteProduct, filterProduct, getAllProduct } from "../../services/Auth-Service";
 // import { useNavigate } from "react-router-dom";
 import AddProduct from "./AddProduct";
 import Swal from "sweetalert2";
+import { Menu, Transition } from "@headlessui/react";
+import { ChevronDownIcon, FunnelIcon } from "@heroicons/react/24/outline";
+import { sortOptions } from "../../../user/hooks/data";
+import Pagination from "../../components/Pagination";
+
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
 
 const ShowAllProduct = () => {
   // const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [getProduct, setGetProduct] = useState([])
-  const [editProduct, setEditProduct] = useState<IGetAllProduct | null>(null)
-
-  console.log("get ->", getProduct);
+  const [editProduct, setEditProduct] = useState<IGetAllProduct | null>(null)  
   
-
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -74,31 +80,62 @@ const ShowAllProduct = () => {
     setEditProduct(data);
   }
 
+  const handleFilter = (option:IGetFilterName) => {
+    console.log(option);
+    filterProduct(option)
+    .then((res) =>{
+      console.log(res);
+      if(res && res.data && res.data.data && res.data.data.length > 0){
+        const { data } = res.data;
+        setGetProduct(data)
+      }else{
+        Swal.fire({
+          position: 'top-end',
+          icon: 'error',
+          title: 'Searchable category is empty.',
+          showConfirmButton: false,
+          timer: 2000
+        })
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
   useEffect(() => {
     handleGetAllProduct()
     updateProductList()
   }, [])
   
+  
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
-      <div className="sm:flex sm:items-center">
-        <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold leading-6 text-gray-900">Products</h1>
-          <p className="mt-2 text-sm text-gray-700">
-            A list of all the product in your account including their name, description, category, stock and price.
-          </p>
+    <>
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="sm:flex sm:items-center sm:justify-between">
+          {/* Product page related text */}
+          <div className="sm:flex-auto">
+            <h1 className="text-base font-semibold leading-6 text-gray-900">Products</h1>
+            <p className="mt-2 text-sm text-gray-700">
+              A list of all the product in your account including their name, description, category, stock and price.
+            </p>
+          </div>
+
+          {/* Add User Button */}
+          <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none ">
+            <AddProduct isOpen={isModalOpen} onClose={closeModal} updateProductList={updateProductList} editProduct={editProduct} setProduct={setEditProduct}/>
+            <button
+              onClick={openModal}
+              type="button"
+              className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Add user
+            </button>
+          </div>
         </div>
-        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <AddProduct isOpen={isModalOpen} onClose={closeModal} updateProductList={updateProductList} editProduct={editProduct} setProduct={setEditProduct}/>
-          <button
-            onClick={openModal}
-            type="button"
-            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            Add user
-          </button>
-        </div>
+
       </div>
+      {/* Table */}
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -118,13 +155,71 @@ const ShowAllProduct = () => {
                     Prices
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                    Category
+                    {/* Category */}
+                    <div className="flex items-center">
+                      <Menu as="div" className="relative inline-block text-left">
+                        <div className='z-10 flex'>
+                          <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                            Categories
+                            <ChevronDownIcon
+                              className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                              aria-hidden="true"
+                            />
+                          </Menu.Button>
+                        </div>
+
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-100"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="absolute left-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div className="py-1">
+                              {sortOptions.map((option) => (
+                                <Menu.Item key={option.name}>
+                                  {({ active }) => (
+                                    <button
+                                      className={classNames(
+                                        option.current ? 'font-medium text-gray-900' : 'text-gray-500',
+                                        active ? 'bg-gray-100' : '',
+                                        'block px-4 py-2 text-sm'
+                                      )}
+                                      onClick={() => handleFilter(option)}
+                                    >
+                                      {option.name}
+                                    </button>
+                                  )}
+                                </Menu.Item>
+                              ))}
+                              <Menu.Item>
+                                <button onClick={() => handleGetAllProduct()} className='font-medium text-red-500 hover:text-red-700 hover:bg-gray-100 block px-4 py-2 text-sm'>
+                                  Clear all
+                                </button>
+                              </Menu.Item>
+                            </div>
+                          </Menu.Items>
+                        </Transition>
+
+                      </Menu>
+                      <button
+                        type="button"
+                        className="m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
+                      >
+                        <span className="sr-only">Filters</span>
+                        <FunnelIcon className="h-5 w-5" aria-hidden="true" />
+                      </button>
+                    </div>
                   </th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     Stock
                   </th>
-                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                     <span className="sr-only">Edit</span>
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -155,7 +250,11 @@ const ShowAllProduct = () => {
           </div>
         </div>
       </div>
-    </div>
+
+      <div>
+        <Pagination/>
+      </div>
+    </>
   )
 }
 
