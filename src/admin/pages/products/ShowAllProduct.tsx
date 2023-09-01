@@ -1,13 +1,13 @@
+import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
+import { sortOptions } from "../../../user/hooks/data";
 import { IGetAllProduct, IGetFilterName } from "../../interfaces";
-import { deleteProduct, filterProduct, getAllProduct } from "../../services/Auth-Service";
-// import { useNavigate } from "react-router-dom";
+import { ChevronDownIcon, FunnelIcon } from "@heroicons/react/24/outline";
+import { deleteProduct, filterProduct, getAllProduct, productPagination } from "../../services/Auth-Service";
 import AddProduct from "./AddProduct";
 import Swal from "sweetalert2";
-import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon, FunnelIcon } from "@heroicons/react/24/outline";
-import { sortOptions } from "../../../user/hooks/data";
-import Pagination from "../../components/Pagination";
+import PaginationDemo from "../../components/PaginationDemo";
+import axios from "axios";
 
 
 function classNames(...classes: string[]) {
@@ -15,10 +15,13 @@ function classNames(...classes: string[]) {
 }
 
 const ShowAllProduct = () => {
-  // const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [getProduct, setGetProduct] = useState([])
+  const [, setGetProduct] = useState([])
   const [editProduct, setEditProduct] = useState<IGetAllProduct | null>(null)  
+  const [items, setItems] = useState<IGetAllProduct[]>([]);
+  const [pageCount, setpageCount] = useState(0);
+  // console.log("Show All Products items: =>",items);
+  
   
   const openModal = () => {
     setIsModalOpen(true);
@@ -102,6 +105,47 @@ const ShowAllProduct = () => {
       console.log(error);
     });
   }
+
+  const limit = 5;
+
+  useEffect(() => {
+    const getComments = async () => {
+        try {
+          const res = await axios.get(`http://localhost:4001/api/v1/search?page=1&limit=${limit}`);
+          // console.log(res);
+          const data = res?.data.data;
+          setItems(data);
+          console.log("data =>", data);
+          getAllProduct()
+          .then((res)=>{
+            const total = res?.data.findAllProduct.length
+            setpageCount(Math.ceil(total / limit));
+            console.log("Get All Product =>",res);
+            console.log("Total =>", total); 
+            console.log("Math =>",Math.ceil(total / limit));
+          })
+          setItems(data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+    };
+    getComments();
+  }, []);
+
+  const fetchPaginationData = async (currentPage: number) => {
+    productPagination(currentPage, limit)
+    .then((res) => {
+        console.log("RES OF PAGINATION=>",res);
+        if(res?.data.data){
+            const data = res?.data.data
+            console.log("Pagination data: =>",data);
+            setItems(data);
+        }
+    })
+    .catch((error) =>{
+        console.log("Error =>",error);
+    });
+  };
 
   useEffect(() => {
     handleGetAllProduct()
@@ -224,7 +268,7 @@ const ShowAllProduct = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {getProduct?.map((person:IGetAllProduct,index:number) => (
+                {items?.map((person:IGetAllProduct,index:number) => (
                   <tr key={index}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                       {person.prod_name}
@@ -252,7 +296,7 @@ const ShowAllProduct = () => {
       </div>
 
       <div>
-        <Pagination/>
+        <PaginationDemo fetchPaginationData={fetchPaginationData} pageCount={pageCount} />
       </div>
     </>
   )

@@ -194,7 +194,7 @@ export const navigationBar = [
   { name: 'Orders', href: 'dashboard', icon: TbListCheck },
   { name: 'Categories', href: 'dashboard', icon: HiOutlineViewGridAdd },
   { name: 'Products', href: 'products', icon: BiCartAdd },
-  { name: 'Offers', href: 'dashboard', icon: MdOutlineLocalOffer },
+  { name: 'Offers', href: 'offers', icon: MdOutlineLocalOffer },
   { name: 'Payment History', href: 'dashboard', icon: RiChatHistoryLine },
   { name: 'Featured Product', href: 'dashboard', icon: TbDiscountCheck },
 ]

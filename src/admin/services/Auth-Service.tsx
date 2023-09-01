@@ -67,3 +67,14 @@ export const filterProduct = async (option:IGetFilterName) => {
         console.log(error);
     }
 }
+
+//Pagination 
+export const productPagination = async (data:number, limit: number) => {
+    try {
+        const res = await axios.get(`${API_URL}api/v1/search?page=${data}&limit=${limit}`)
+        // console.log("Res =>",res);
+        return res        
+    } catch (error) {
+        console.log(error);
+    }
+}

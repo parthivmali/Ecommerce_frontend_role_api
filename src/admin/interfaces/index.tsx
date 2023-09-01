@@ -38,3 +38,12 @@ export interface IGetFilterName {
     name: string;
     current: boolean;
 }
+
+export interface IPaginationProps {
+    getProduct: IGetAllProduct[] | null;
+}
+
+export interface IFetchPaginationData {
+    fetchPaginationData: (currentPage: number) => Promise<void>
+    , pageCount:number
+}
